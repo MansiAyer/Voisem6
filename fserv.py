@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import sys
 import os
+import re
 #from tensorflow import keras
 #model = keras.models.load_model('mymodel')
 emotionMap = {0:'neutral', 1:'calm', 2:'happy', 3:'sad', 4:'angry', 5:'fear', 6:'disgust', 7:'surprise'}
@@ -65,7 +66,9 @@ def predictn():
     sample = melextrfn(audpath)
     predictions = model.predict(sample)
     classes = pd.DataFrame(np.argmax(predictions, axis = 1))
-    return render_template('test.html', value=classes.replace(emotionMap))
+    emotepred = str(classes.replace(emotionMap))
+    emotepred = re.findall("[a-zA-Z]+", emotepred)
+    return render_template('test.html', value=("Emotion detected is "+emotepred[0]))
 
 @app.route("/pagetwo")
 def pagetwo():
